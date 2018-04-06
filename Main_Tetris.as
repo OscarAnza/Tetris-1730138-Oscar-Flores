@@ -2,6 +2,8 @@
 	import flash.display.MovieClip;
 	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	
 	public class Main_Tetris extends MovieClip{
 		//VARIABLES
@@ -9,37 +11,120 @@
 		var limite:int;
 		var speed:int;
 		//PIEZAS
+		var creadorS:Sprite = new Sprite();
+		var atomo1:Atomo1;
+		var cuadro:Cuadro;
+		var generador:Array = [];
+		var posX:Number;
+		var posY:Number;
+		
 		var pieza:DisplayObject;
 		var piezas:Array = [];
 		
 		//Funcion Inicial
 		public function Main_Tetris() {
+			creadorS.x = creador.x;
+			creadorS.y = creador.y;
+			addChild(creadorS);
+			
 			Pieza();
 			
-			stage.addEventListener(Event.ENTER_FRAME, Caida);
+			piece.addEventListener(MouseEvent.CLICK, Cambiar);
+			//stage.addEventListener(Event.ENTER_FRAME, Caida);
+		}
+		
+		//FUNCION TEMPORAL
+		private function Cambiar(event:MouseEvent){
+			Pieza();
 		}
 		
 		//GENERADOR DE PIEZAS
 		private function Pieza(){
 			//Generar un numero aleatorio
-			select = Math.random() * 2 + 1;
+			select = Math.random() * 7 + 1;
+			posX = 0;
+			posY = 0;
 			
 			//En base al numero, generar la pieza correspondiente
 			switch(select){
-				case 1: pieza = new Pieza1(); 
-						piezas.push(pieza);
-						limite = 345; break;
-				case 2: pieza = new Pieza2();
-						piezas.push(pieza);
-						limite = 375; break;
+				case 1: generador = [[0,0,0,0],
+									 [0,1,0,0],
+									 [0,1,0,0],
+									 [0,1,1,0]]
+						limite = 445; break;
+						
+				case 2: generador = [[0,0,0,0],
+									 [0,0,1,0],
+									 [0,0,1,0],
+									 [0,1,1,0]]
+						limite = 475; break;
+						
+				case 3: generador = [[0,0,0,0],
+									 [0,1,1,0],
+									 [0,1,1,0],
+									 [0,0,0,0]]
+						limite = 475; break;
+						
+				case 4: generador = [[0,0,0,0],
+									 [0,0,1,0],
+									 [0,1,1,0],
+									 [0,1,0,0]]
+						limite = 475; break;
+						
+				case 5: generador = [[0,0,0,0],
+									 [0,1,0,0],
+									 [0,1,1,0],
+									 [0,0,1,0]]
+						limite = 475; break;
+						
+				case 6: generador = [[0,1,0,0],
+									 [0,1,0,0],
+									 [0,1,0,0],
+									 [0,1,0,0]]
+						limite = 475; break;
+						
+				case 7: generador = [[0,0,0,0],
+									 [0,1,0,0],
+									 [0,1,1,0],
+									 [0,1,0,0]]
+						limite = 475; break;
 			}
 			
-			Colocar();
+			Generar();
+			//Colocar();
+		}
+		
+		private function Generar(){
+			
+			for(var a:int = 0; a < 4; a++){
+				for(var b:int = 0; b < 4; b++){
+					trace("posX: " + posX);
+					cuadro = new Cuadro;
+					atomo1 = new Atomo1;
+					if(generador[a][b] == 0){
+						
+						cuadro.x = (posX * 20);
+						cuadro.y = (posY * 20);
+						creadorS.addChild(cuadro);
+					}
+					else{
+						
+						atomo1.x = (posX * 20);
+						atomo1.y = (posY * 20);
+						creadorS.addChild(atomo1);
+					}
+					trace("a: " + a + ", " + "b: " + b);
+					posX++;
+				}
+				trace("posY: " + posY);
+				posX = 0;
+				posY++;
+			}
 		}
 		
 		//Colocar la pieza en el escenario y hacer que caiga
 		private function Colocar(){
-			pieza.x = Math.random() * 400;
+			pieza.x = Math.random() * 400 + 20;
 			pieza.y = -10;
 			addChild(pieza);
 			
